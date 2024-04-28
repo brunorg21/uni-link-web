@@ -5,6 +5,8 @@ import { Button } from "@mui/material";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import HomeIcon from "@mui/icons-material/Home";
 import AddIcon from "@mui/icons-material/Add";
+import Home from "../pages/Home";
+import { Navigate, Outlet } from "react-router-dom";
 
 const Notebook: React.FC = () => {
   return (
@@ -61,7 +63,7 @@ const Notebook: React.FC = () => {
   );
 };
 
-const AppContainer: React.FC<PropsWithChildren> = ({ children }) => {
+const AppContainer: React.FC = () => {
   return (
     <div className="bg-gradient-to-r from-[#171717] flex flex-row to-[#313131] h-screen w-screen ">
       <div className="h-screen w-[20vw] flex flex-col gap-y-20 border-r-2 p-10">
@@ -76,11 +78,13 @@ const AppContainer: React.FC<PropsWithChildren> = ({ children }) => {
               color: "white",
               borderRadius: "10px",
               padding: "0.8rem",
+              fontSize: "12px",
             }}
             size="large"
             fullWidth
             variant="text"
             startIcon={<HomeIcon />}
+            onClick={() => <Navigate to="/home"></Navigate>}
           >
             Página Pricipal
           </Button>
@@ -93,6 +97,7 @@ const AppContainer: React.FC<PropsWithChildren> = ({ children }) => {
               color: "white",
               borderRadius: "10px",
               padding: "0.8rem",
+              fontSize: "12px",
             }}
             size="large"
             fullWidth
@@ -110,6 +115,7 @@ const AppContainer: React.FC<PropsWithChildren> = ({ children }) => {
               color: "white",
               borderRadius: "10px",
               padding: "0.8rem",
+              fontSize: "12px",
             }}
             size="large"
             fullWidth
@@ -127,6 +133,7 @@ const AppContainer: React.FC<PropsWithChildren> = ({ children }) => {
               color: "white",
               borderRadius: "10px",
               padding: "0.8rem",
+              fontSize: "12px",
             }}
             size="large"
             fullWidth
@@ -137,7 +144,9 @@ const AppContainer: React.FC<PropsWithChildren> = ({ children }) => {
           </Button>
         </div>
       </div>
-      <div className="h-screen w-[80vw]">{children}</div>
+      <div className="h-screen w-[80vw]">
+        <Outlet />
+      </div>
     </div>
   );
 };
