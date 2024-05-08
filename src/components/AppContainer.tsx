@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useState } from "react";
 import logo from "../assets/logo.png";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Button } from "@mui/material";
@@ -7,6 +7,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import AddIcon from "@mui/icons-material/Add";
 import Home from "../pages/Home";
 import { Navigate, Outlet } from "react-router-dom";
+import { NewAlocation } from "./NewAlocation";
 
 const Notebook: React.FC = () => {
   return (
@@ -64,6 +65,7 @@ const Notebook: React.FC = () => {
 };
 
 const AppContainer: React.FC = () => {
+  const [open, setOpen] = useState<boolean>(false)
   return (
     <div className="bg-gradient-to-r from-[#171717] flex flex-row to-[#313131] h-screen w-screen ">
       <div className="h-screen w-[20vw] flex flex-col gap-y-20 border-r-2 p-10">
@@ -103,9 +105,11 @@ const AppContainer: React.FC = () => {
             fullWidth
             variant="text"
             startIcon={<AddIcon />}
+            onClick={() => setOpen(true)}
           >
             Nova Alocação
           </Button>
+          <NewAlocation handleClose={() => setOpen(false)} open={open}/>
           <Button
             sx={{
               "&:hover": {
