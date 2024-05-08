@@ -19,7 +19,7 @@ const Home: React.FC = () => {
         <div className="flex flex-row gap-4">
           <ClassesCard />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Paper>
+            <Paper className="w-[500px]">
               <DateCalendar />
             </Paper>
           </LocalizationProvider>
