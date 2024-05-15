@@ -8,6 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Home from "../pages/Home";
 import { Navigate, Outlet } from "react-router-dom";
 import { NewAlocation } from "./NewAlocation";
+import { MeetingRoom } from "@mui/icons-material";
 
 const Notebook: React.FC = () => {
   return (
@@ -120,13 +121,17 @@ const AppContainer: React.FC = () => {
               borderRadius: "10px",
               padding: "0.8rem",
               fontSize: "12px",
+              display: "flex",
+              justifyContent: "space-center",
+              alignItems: "center",
+              gap: "1rem"
             }}
             size="large"
             fullWidth
             variant="text"
-            startIcon={<Notebook />}
+            startIcon={<MeetingRoom />}
           >
-            Configurações
+            Salas
           </Button>
           <Button
             sx={{

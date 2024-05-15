@@ -57,8 +57,8 @@ export function NewAlocation({open, handleClose}: NewAlocationProps) {
           
             </DialogContent>
             <DialogActions>
-            <Button onClick={handleClose}>Cancelar</Button>
-            <Button type="submit">Alocar</Button>
+            <Button variant="outlined" onClick={handleClose}>Cancelar</Button>
+            <Button variant="outlined" type="submit">Alocar</Button>
             </DialogActions>
       </Dialog>
     )
