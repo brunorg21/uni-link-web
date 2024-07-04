@@ -3,29 +3,34 @@ import ClassesCard from "../components/ClassesCard";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { Paper } from "@mui/material";
-import RoomsAvailable from "../components/RoomsAvailable";
-import MostUsedRooms from "../components/MostUsedRooms";
+import "dayjs/locale/pt-BR";
+import { TeacherHome } from "./teacher-pages/teacher-home";
+import { useUser } from "../contexts/user-context";
+import { StudentHome } from "./student-pages/student-home";
 
-const Home: React.FC = () => {
+const Home = () => {
+  const { user } = useUser();
+
+  console.log(user);
+
   return (
-    <div className="h-screen w-[80vw] bg-black px-6 py-4 overflow-auto">
+    <div className="h-full  bg-black px-6 py-4 overflow-auto">
       <div className="mb-5">
         <div>
           <p className="text-white text-xl">Olá, Luis Evangelista</p>
           <p className="text-gray-400 text-lg">Seja bem vindo a UniLink</p>
         </div>
       </div>
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-row gap-4">
+      <div className="flex flex-col space-y-2">
+        <div className="flex gap-2 justify-between items-center">
           <ClassesCard />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Paper className="w-[500px]">
+            <Paper>
               <DateCalendar />
             </Paper>
           </LocalizationProvider>
         </div>
-        <RoomsAvailable />
-        <MostUsedRooms />
+        {user.role === "STUDENT" ? <StudentHome /> : <TeacherHome />}
       </div>
     </div>
   );
