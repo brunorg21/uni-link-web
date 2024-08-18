@@ -14,7 +14,7 @@ const Home = () => {
   console.log(user);
 
   return (
-    <div className="h-full  bg-black px-6 py-4 overflow-auto">
+    <div className="h-full px-6 py-4 overflow-auto">
       <div className="mb-5">
         <div>
           <p className="text-white text-xl">Olá, Luis Evangelista</p>

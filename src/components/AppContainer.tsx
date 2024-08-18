@@ -6,12 +6,15 @@ import { Button } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import AddIcon from "@mui/icons-material/Add";
 
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { NewAlocation } from "./NewAlocation";
 import { MeetingRoom } from "@mui/icons-material";
+import GroupsIcon from "@mui/icons-material/Groups";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 
 const AppContainer: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
   return (
     <div className="bg-gradient-to-r from-[#171717] flex flex-row to-[#313131] h-screen w-screen ">
       <div className="h-screen w-[20vw] flex flex-col gap-y-20 border-r-2 p-10">
@@ -27,6 +30,8 @@ const AppContainer: React.FC = () => {
               borderRadius: "10px",
               padding: "0.8rem",
               fontSize: "17px",
+              display: "flex",
+              justifyContent: "flex-start",
             }}
             size="large"
             fullWidth
@@ -39,7 +44,7 @@ const AppContainer: React.FC = () => {
                 }}
               />
             }
-            onClick={() => <Navigate to="/home"></Navigate>}
+            onClick={() => navigate("/home")}
           >
             Página Principal
           </Button>
@@ -53,6 +58,8 @@ const AppContainer: React.FC = () => {
               borderRadius: "10px",
               padding: "0.8rem",
               fontSize: "17px",
+              display: "flex",
+              justifyContent: "flex-start",
             }}
             size="large"
             fullWidth
@@ -71,6 +78,7 @@ const AppContainer: React.FC = () => {
           </Button>
           <NewAlocation handleClose={() => setOpen(false)} open={open} />
           <Button
+            onClick={() => navigate("/rooms")}
             sx={{
               "&:hover": {
                 color: "black",
@@ -81,9 +89,7 @@ const AppContainer: React.FC = () => {
               padding: "0.8rem",
               fontSize: "17px",
               display: "flex",
-              justifyContent: "space-center",
-              alignItems: "center",
-              gap: "1rem",
+              justifyContent: "flex-start",
             }}
             size="large"
             fullWidth
@@ -100,6 +106,7 @@ const AppContainer: React.FC = () => {
             Salas
           </Button>
           <Button
+            onClick={() => navigate("/teachers")}
             sx={{
               "&:hover": {
                 color: "black",
@@ -109,6 +116,63 @@ const AppContainer: React.FC = () => {
               borderRadius: "10px",
               padding: "0.8rem",
               fontSize: "17px",
+              display: "flex",
+              justifyContent: "flex-start",
+            }}
+            size="large"
+            fullWidth
+            variant="text"
+            startIcon={
+              <GroupsIcon
+                sx={{
+                  width: "1.5rem",
+                  height: "1.5rem",
+                }}
+              />
+            }
+          >
+            Professores
+          </Button>
+          <Button
+            onClick={() => navigate("/teachers")}
+            sx={{
+              "&:hover": {
+                color: "black",
+                backgroundColor: "white",
+              },
+              color: "white",
+              borderRadius: "10px",
+              padding: "0.8rem",
+              fontSize: "17px",
+              display: "flex",
+              justifyContent: "flex-start",
+            }}
+            size="large"
+            fullWidth
+            variant="text"
+            startIcon={
+              <LibraryBooksIcon
+                sx={{
+                  width: "1.5rem",
+                  height: "1.5rem",
+                }}
+              />
+            }
+          >
+            Matérias
+          </Button>
+          <Button
+            sx={{
+              "&:hover": {
+                color: "black",
+                backgroundColor: "white",
+              },
+              color: "white",
+              borderRadius: "10px",
+              padding: "0.8rem",
+              fontSize: "17px",
+              display: "flex",
+              justifyContent: "flex-start",
             }}
             size="large"
             fullWidth
@@ -126,7 +190,7 @@ const AppContainer: React.FC = () => {
           </Button>
         </div>
       </div>
-      <div className="h-screen w-[80vw]">
+      <div className="h-screen w-[80vw] overflow-hidden">
         <Outlet />
       </div>
     </div>
