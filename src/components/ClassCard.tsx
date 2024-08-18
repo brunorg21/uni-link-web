@@ -1,6 +1,6 @@
 export function ClassCard() {
   return (
-    <div className=" bg-[#272727] rounded-lg px-1 py-3 text-center col-span-1">
+    <div className=" bg-[#272727] rounded-lg px-1 py-3 text-center col-span-1 h-40">
       <span className="text-white text-sm">
         Análise e Desenvolvimento de Sistemas
       </span>

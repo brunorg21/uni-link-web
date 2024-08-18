@@ -10,7 +10,6 @@ const ClassesCard: React.FC = () => {
         <ClassCard />
         <ClassCard />
         <ClassCard />
-        <ClassCard />
       </div>
     </div>
   );

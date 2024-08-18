@@ -134,7 +134,7 @@ const AppContainer: React.FC = () => {
             Professores
           </Button>
           <Button
-            onClick={() => navigate("/teachers")}
+            onClick={() => navigate("/subjects")}
             sx={{
               "&:hover": {
                 color: "black",
