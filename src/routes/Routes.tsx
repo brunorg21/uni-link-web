@@ -1,4 +1,4 @@
-import { Navigate, createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import AppContainer from "../components/AppContainer";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
@@ -6,17 +6,18 @@ import Signup from "../pages/Signup";
 import Rooms from "../pages/Rooms";
 import Teachers from "../pages/Teachers";
 import Subjects from "../pages/Subjects";
+import { RequireAuth } from "./RequireAuth";
 
 export const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Navigate to="/login" />,
-  },
   { path: "/login", element: <Login /> },
   { path: "/signup", element: <Signup /> },
   {
     path: "/",
-    element: <AppContainer />,
+    element: (
+      <RequireAuth>
+        <AppContainer />
+      </RequireAuth>
+    ),
     children: [
       {
         path: "/home",

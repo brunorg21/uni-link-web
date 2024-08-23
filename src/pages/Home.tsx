@@ -11,13 +11,13 @@ import { StudentHome } from "./student-pages/student-home";
 const Home = () => {
   const { user } = useUser();
 
-  console.log(user);
-
   return (
     <div className="h-full px-6 py-4 overflow-auto">
       <div className="mb-5">
         <div>
-          <p className="text-white text-xl">Olá, Luis Evangelista</p>
+          <p className="text-white text-xl">
+            {user ? `Olá, ${user?.name}` : "Carregando..."}
+          </p>
           <p className="text-gray-400 text-lg">Seja bem vindo a UniLink</p>
         </div>
       </div>
@@ -30,7 +30,8 @@ const Home = () => {
             </Paper>
           </LocalizationProvider>
         </div>
-        {user.role === "STUDENT" ? <StudentHome /> : <TeacherHome />}
+        {user && user.role === "STUDENT" && <StudentHome />}
+        {user && user.role === "TEACHER" && <TeacherHome />}
       </div>
     </div>
   );

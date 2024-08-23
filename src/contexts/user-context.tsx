@@ -1,10 +1,16 @@
-import { ReactNode, createContext, useContext, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { User } from "../models/user";
+import Cookies from "universal-cookie";
 
 interface UserContextProps {
-  user: {
-    id: number;
-    role: string;
-  };
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 export const UserContext = createContext({} as UserContextProps);
@@ -14,13 +20,27 @@ interface UserProviderProps {
 }
 
 export function UserProvider({ children }: UserProviderProps) {
-  const [user] = useState({
-    id: 1,
-    role: "STUDENT",
-  });
+  const [user, setUser] = useState<User | null>(null);
+
+  const cookies = new Cookies();
+
+  useEffect(() => {
+    const userAllowed = cookies.get("user-allowed");
+    const token = cookies.get("access_token");
+
+    if (userAllowed && token) {
+      setUser(userAllowed);
+    } else {
+      cookies.remove("user-allowed");
+      cookies.remove("access_token");
+      setUser(null);
+    }
+  }, []);
 
   return (
-    <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{ user, setUser }}>
+      {children}
+    </UserContext.Provider>
   );
 }
 
