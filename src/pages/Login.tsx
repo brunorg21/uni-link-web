@@ -86,6 +86,8 @@ const Login: React.FC = () => {
     });
   }
 
+  console.log("formState", formState)
+
   const handleClickShowPassword = () => {
     setShowPassword((show) => !show);
   };
