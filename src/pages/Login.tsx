@@ -1,12 +1,4 @@
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import {
-  Button,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  TextField,
-} from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo4 from "../assets/logo4.png";
 import { useForm } from "react-hook-form";
@@ -16,6 +8,17 @@ import { useMutation } from "@tanstack/react-query";
 import { signIn, SignInResponse } from "../http/sign-in";
 import { useUser } from "../contexts/user-context";
 import Cookies from "universal-cookie";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 const authenticateFormSchema = z.object({
   email: z
@@ -35,7 +38,6 @@ type AuthenticateFormSchema = z.infer<typeof authenticateFormSchema>;
 const Login: React.FC = () => {
   const { user, setUser } = useUser();
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
 
   const cookies = new Cookies();
 
@@ -69,11 +71,9 @@ const Login: React.FC = () => {
     },
   });
 
-  const { handleSubmit, register, formState } = useForm<AuthenticateFormSchema>(
-    {
-      resolver: zodResolver(authenticateFormSchema),
-    }
-  );
+  const form = useForm<AuthenticateFormSchema>({
+    resolver: zodResolver(authenticateFormSchema),
+  });
 
   useEffect(() => {
     user && navigate("/home");
@@ -86,9 +86,6 @@ const Login: React.FC = () => {
     });
   }
 
-  const handleClickShowPassword = () => {
-    setShowPassword((show) => !show);
-  };
   return (
     <div className="h-screen w-screen flex justify-center items-center bg-[#2C2C2C]">
       <div className="gap-y-4 flex justify-center items-center flex-col w-[28rem] h-[32rem] rounded-lg bg-white">
@@ -99,64 +96,63 @@ const Login: React.FC = () => {
             <span className="text-md">Gestão de Salas de Aula</span>
           </div>
         </div>
-        <FormControl
-          component="form"
-          onSubmit={handleSubmit(handleSignIn)}
-          className="w-4/5 flex gap-y-4"
-        >
-          <div className="flex flex-col gap-2">
-            <TextField
-              {...register("email")}
-              label="E-mail"
-              type="email"
-              size="small"
-            />
-            {formState.errors.email && (
-              <span className="text-red-500 text-sm font-bold">
-                {formState.errors.email.message}
-              </span>
-            )}
-          </div>
-          <div className="flex flex-col gap-2">
-            <TextField
-              {...register("password")}
-              label="Senha"
-              size="small"
-              type={showPassword ? "text" : "password"}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={handleClickShowPassword}>
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            {formState.errors.password && (
-              <span className="text-red-500 text-sm font-bold">
-                {formState.errors.password.message}
-              </span>
-            )}
-          </div>
-          <Link
-            className="text-blue-600 hover:underline decoration-solid"
-            to={"/"}
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSignIn)}
+            className="w-4/5 flex flex-col gap-y-4"
+            action=""
           >
-            Esqueci minha senha.
-          </Link>
-          <Button
-            type="submit"
-            className="w-full"
-            sx={{ marginTop: "2rem" }}
-            variant="outlined"
-          >
-            Login
-          </Button>
-        </FormControl>
+            <div className="flex flex-col gap-2">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>E-mail</FormLabel>
+                    <FormControl>
+                      <Input placeholder="E-mail" {...field} />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Senha</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="Senha" {...field} />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <Link
+              className=" hover:underline decoration-solid font-semibold"
+              to={"/"}
+            >
+              Esqueci minha senha.
+            </Link>
+
+            <Button type="submit" className="w-full mt-2">
+              {signInMutation.isPending ? (
+                <Loader2 className="animate-spin" size={"small"} />
+              ) : (
+                "Login"
+              )}
+            </Button>
+          </form>
+        </Form>
 
         <Link
-          className="text-blue-600 hover:underline decoration-solid"
+          className="hover:underline decoration-solid font-semibold"
           to={"/signup"}
         >
           Não possui conta? Registre-se
