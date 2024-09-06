@@ -24,6 +24,8 @@ export function UserProvider({ children }: UserProviderProps) {
 
   const cookies = new Cookies();
 
+  console.log(user)
+
   useEffect(() => {
     const userAllowed = cookies.get("user-allowed");
     const token = cookies.get("access_token");

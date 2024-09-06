@@ -1,26 +1,27 @@
+import { Pill } from "./Pill";
+import { Button } from "./ui/button";
+
 const RoomsCard: React.FC = () => {
   return (
-    <div className="flex flex-row bg-[#272727] h-28 rounded-lg justify-center p-6 items-center gap-10">
-      <div className="rounded-full bg-[#66FF59] p-3 w-28 h-8 flex justify-center items-center font-bold">
-        Disponível
-      </div>
+    <div className="flex flex-wrap md:flex-row sm:flex-col flex-col bg-[#272727] rounded-lg justify-center p-6 items-center justify-between">
+      <span className="flex justify-center items-center bg-emerald-400 rounded-full p-3 w-[120px] font-semibold">Disponível</span>
       <div className="flex flex-col items-center gap-4">
-        <span className="text-white text-lg">Laboratório 1</span>
+        <span className="text-white text-2xl">Laboratório 1</span>
         <div className="flex flex-col items-center">
-          <p className="text-sm text-gray-400">Capacidade: 25 Alunos</p>
-          <p className="text-sm text-gray-400">Computadores: 20</p>
+          <p className="text-md text-gray-400 font-bold">Capacidade: 25 Alunos</p>
+          <p className="text-md text-gray-400 font-bold">Computadores: 20</p>
         </div>
       </div>
       <div className="flex flex-row gap-4">
-        <span className="text-sm text-gray-400">18:45 - 19:35</span>
-        <span className="text-sm text-gray-400">19:35 - 20:25</span>
-        <span className="text-sm text-gray-400">20:35 - 21:25</span>
-        <span className="text-sm text-gray-400">21:25 - 22:15</span>
-        <span className="text-sm text-gray-400">22:15 - 23:05</span>
+        <span className="text-lg text-red-400 font-bold">18:45 - 19:35</span>
+        <span className="text-lg text-gray-400 font-bold">19:35 - 20:25</span>
+        <span className="text-lg text-red-400 font-bold">20:35 - 21:25</span>
+        <span className="text-lg text-gray-400 font-bold">21:25 - 22:15</span>
+        <span className="text-lg text-gray-400 font-bold">22:15 - 23:05</span>
       </div>
-      <div className="rounded-full bg-[#FFFF00] p-3 w-28 h-8 flex justify-center items-center font-bold">
+      <Button size={"lg"} className="bg-yellow-500 hover:bg-yellow-300 text-secondary text-lg">
         Reservar
-      </div>
+      </Button>
     </div>
   );
 };
