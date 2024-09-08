@@ -1,14 +1,17 @@
-import { Pill } from "./Pill";
 import { Button } from "./ui/button";
 
 const RoomsCard: React.FC = () => {
   return (
     <div className="flex flex-wrap md:flex-row sm:flex-col flex-col bg-[#272727] rounded-lg justify-center p-6 items-center justify-between">
-      <span className="flex justify-center items-center bg-emerald-400 rounded-full p-3 w-[120px] font-semibold">Disponível</span>
+      <span className="flex justify-center items-center bg-emerald-400 rounded-full p-3 w-[120px] font-semibold">
+        Disponível
+      </span>
       <div className="flex flex-col items-center gap-4">
         <span className="text-white text-2xl">Laboratório 1</span>
         <div className="flex flex-col items-center">
-          <p className="text-md text-gray-400 font-bold">Capacidade: 25 Alunos</p>
+          <p className="text-md text-gray-400 font-bold">
+            Capacidade: 25 Alunos
+          </p>
           <p className="text-md text-gray-400 font-bold">Computadores: 20</p>
         </div>
       </div>
@@ -19,7 +22,7 @@ const RoomsCard: React.FC = () => {
         <span className="text-lg text-gray-400 font-bold">21:25 - 22:15</span>
         <span className="text-lg text-gray-400 font-bold">22:15 - 23:05</span>
       </div>
-      <Button size={"lg"} className="bg-yellow-500 hover:bg-yellow-300 text-secondary text-lg">
+      <Button variant={"secondary"} size={"lg"} className="text-lg">
         Reservar
       </Button>
     </div>

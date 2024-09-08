@@ -15,7 +15,7 @@ const Home = () => {
     <div className="h-full px-6 py-4 overflow-auto">
       <div className="mb-5">
         <div>
-          <p className="text-white text-xl">
+          <p className="text-white text-4xl">
             {user ? `Olá, ${user?.name}` : "Carregando..."}
           </p>
           <p className="text-gray-400 text-lg">Seja bem vindo a UniLink</p>

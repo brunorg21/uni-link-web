@@ -19,6 +19,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { AxiosError } from "axios";
+import { toast } from "sonner";
 
 const authenticateFormSchema = z.object({
   email: z
@@ -68,6 +70,11 @@ const Login: React.FC = () => {
       });
       setUser(data.user);
       navigate("/home");
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        error.response?.data.message && toast.error("Crendenciais inválidas");
+      }
     },
   });
 
