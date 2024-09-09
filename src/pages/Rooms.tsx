@@ -2,9 +2,18 @@ import { Button } from "@/components/ui/button";
 import RoomsCard from "../components/RoomsCard";
 import { PlusCircle } from "lucide-react";
 import { useUser } from "@/contexts/user-context";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
+import { IRooms } from "@/models/rooms";
 
 const Rooms: React.FC = () => {
   const { user } = useUser();
+  const { data: classrooms } = useQuery<IRooms[]>({
+    queryKey: ["classrooms"],
+    queryFn: () => {
+      return api.get("/classrooms").then((response) => response.data);
+    },
+  });
 
   return (
     <div className="h-full px-6 py-4 w-full">
@@ -24,13 +33,9 @@ const Rooms: React.FC = () => {
         )}
       </div>
       <div className="flex flex-col space-y-2 bg-white h-[90%] p-6 overflow-y-auto rounded-lg">
-        <RoomsCard />
-        <RoomsCard />
-        <RoomsCard />
-        <RoomsCard />
-        <RoomsCard />
-        <RoomsCard />
-        <RoomsCard />
+        {classrooms?.map((e: IRooms) => (
+          <RoomsCard key={e.id} classroom={e} />
+        ))}
       </div>
     </div>
   );

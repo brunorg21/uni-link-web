@@ -1,6 +1,15 @@
+import { api } from "@/lib/axios";
+import { useQuery } from "@tanstack/react-query";
 import TeachersCard from "../components/TeachersCard";
+import { User } from "@/models/user";
 
 const Teachers: React.FC = () => {
+  const { data: teachers } = useQuery<User[]>({
+    queryKey: ["teachers"],
+    queryFn: () => {
+      return api.get("/teachers").then((response) => response.data);
+    },
+  });
   return (
     <div className="h-full px-6 py-4 ">
       <div className="mb-5">
@@ -10,21 +19,9 @@ const Teachers: React.FC = () => {
         </div>
       </div>
       <div className="flex flex-row flex-wrap gap-5 bg-white h-[90%] p-6 overflow-y-auto rounded-lg">
-        <TeachersCard />
-        <TeachersCard />
-        <TeachersCard />
-        <TeachersCard />
-        <TeachersCard />
-        <TeachersCard />
-        <TeachersCard />
-        <TeachersCard />
-        <TeachersCard />
-        <TeachersCard />
-        <TeachersCard />
-        <TeachersCard />
-        <TeachersCard />
-        <TeachersCard />
-        <TeachersCard />
+        {teachers?.map((e) => {
+          return <TeachersCard key={e.id} user={e} />;
+        })}
       </div>
     </div>
   );

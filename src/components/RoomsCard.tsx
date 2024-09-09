@@ -1,18 +1,24 @@
+import { IRooms } from "@/models/rooms";
 import { Button } from "./ui/button";
 
-const RoomsCard: React.FC = () => {
+interface roomsProps {
+  classroom: IRooms;
+}
+const RoomsCard = ({ classroom }: roomsProps) => {
   return (
     <div className="flex flex-wrap md:flex-row sm:flex-col flex-col bg-[#272727] rounded-lg justify-center p-6 items-center justify-between">
       <span className="flex justify-center items-center bg-emerald-400 rounded-full p-3 w-[120px] font-semibold">
         Disponível
       </span>
       <div className="flex flex-col items-center gap-4">
-        <span className="text-white text-2xl">Laboratório 1</span>
+        <span className="text-white text-2xl">{classroom.name}</span>
         <div className="flex flex-col items-center">
           <p className="text-md text-gray-400 font-bold">
-            Capacidade: 25 Alunos
+            Capacidade: {classroom.capacity} Alunos
           </p>
-          <p className="text-md text-gray-400 font-bold">Computadores: 20</p>
+          <p className="text-md text-gray-400 font-bold">
+            Computadores: {classroom.computers}
+          </p>
         </div>
       </div>
       <div className="flex flex-row gap-4">
