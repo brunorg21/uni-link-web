@@ -1,16 +1,16 @@
-import { User } from "@/models/user";
+import { ITeacher } from "@/models/teacher";
 
-interface teachersProps {
-  user: User;
+interface TeachersProps {
+  teacher: ITeacher;
 }
 
-const TeachersCard = ({ user }: teachersProps) => {
+const TeachersCard = ({ teacher }: TeachersProps) => {
   return (
     <div className="flex flex-row bg-[#272727] h-36 w-[32%] rounded-lg justify-start p-6 items-center gap-10">
       <div className="flex flex-col items-start">
-        <span className="text-white text-lg">{user.name}</span>
+        <span className="text-white text-lg">{teacher.name}</span>
         <div className="flex flex-col items-start">
-          {user.subjects?.map((e) => (
+          {teacher.subjects?.map((e) => (
             <p className="text-sm text-gray-400">{e.name}</p>
           ))}
         </div>

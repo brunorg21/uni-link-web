@@ -24,7 +24,7 @@ const AppContainer: React.FC = () => {
           <NavButton name="Plus" text="Nova alocação" to="/new-alocation" />
           <NavButton name="DoorOpen" text="Salas" to="/rooms" />
           <NavButton name="UserRoundPen" text="Professores" to="/teachers" />
-          <NavButton name="Book" text="Matérias" to="/classes" />
+          <NavButton name="Book" text="Matérias" to="/subjects" />
           <NavButton name="UserRoundCog" text="Configurações" to="/config" />
           <Button
             variant={"ghost"}
