@@ -22,7 +22,7 @@ const Teachers: React.FC = () => {
           <p className="text-gray-400 text-xl">Gestão</p>
         </div>
       </div>
-      <div className="flex flex-col space-y-2 h-[90%] p-6 overflow-y-auto rounded-lg">
+      <div className="flex p-6 max-h-[90vh] overflow-y-auto rounded-lg gap-2 flex-wrap">
         {teachers &&
           (teachers.length > 0 ? (
             teachers?.map((e: ITeacher) => {
