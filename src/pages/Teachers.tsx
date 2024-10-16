@@ -12,8 +12,6 @@ const Teachers: React.FC = () => {
     },
   });
 
-  console.log("teachers", teachers);
-
   return (
     <div className="h-full px-6 py-4 ">
       <div className="mb-5">
@@ -22,7 +20,7 @@ const Teachers: React.FC = () => {
           <p className="text-gray-400 text-xl">Gestão</p>
         </div>
       </div>
-      <div className="flex flex-col space-y-2 h-[90%] p-6 overflow-y-auto rounded-lg">
+      <div className="flex space-y-2 h-[90%] p-6 overflow-y-auto rounded-lg">
         {teachers &&
           (teachers.length > 0 ? (
             teachers?.map((e: ITeacher) => {

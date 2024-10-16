@@ -7,6 +7,7 @@ import {
 } from "react";
 import { User } from "../models/user";
 import Cookies from "universal-cookie";
+import axios from "axios";
 
 interface UserContextProps {
   user: User | null;
@@ -30,6 +31,8 @@ export function UserProvider({ children }: UserProviderProps) {
 
     if (userAllowed && token) {
       setUser(userAllowed);
+
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     } else {
       cookies.remove("user-allowed");
       cookies.remove("access_token");

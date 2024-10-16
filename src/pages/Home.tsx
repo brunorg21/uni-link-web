@@ -11,6 +11,7 @@ import { StudentHome } from "./student-pages/student-home";
 const Home = () => {
   const { user } = useUser();
 
+
   return (
     <div className="h-full px-6 py-4 overflow-auto">
       <div className="mb-5">
@@ -20,6 +21,7 @@ const Home = () => {
           </p>
           <p className="text-gray-400 text-lg">Seja bem vindo a UniLink</p>
         </div>
+        
       </div>
       <div className="flex flex-col space-y-2">
         <div className="flex gap-2 justify-between items-center">

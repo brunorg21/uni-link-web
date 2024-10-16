@@ -6,8 +6,6 @@ interface SubjectProps {
 }
 
 const SubjectCard = ({ subject }: SubjectProps) => {
-  console.log(subject);
-
   return (
     <div className="col-span-1 bg-secondary rounded-lg p-6 items-center ">
       <div className="flex flex-col items-center gap-10">

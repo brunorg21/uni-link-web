@@ -8,16 +8,24 @@ import { IRooms } from "@/models/rooms";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { RoomModal } from "@/components/room-modal";
 
+import { DatePicker } from "@/components/ui/date-picker";
+import { useState } from "react";
+
 const Rooms: React.FC = () => {
+  const [date, setDate] = useState<Date>();
   const { user } = useUser();
   const { data: classrooms } = useQuery<IRooms[]>({
-    queryKey: ["classrooms"],
-    queryFn: () => {
-      return api.get("/classrooms").then((response) => response.data);
+    queryKey: ["classrooms", date],
+    queryFn: async () => {
+      const response = await api
+        .get(`/classrooms${date ? `?date=${date.toISOString()}` : ""}`)
+        .then((response) => response.data);
+
+      console.log("response", response);
+
+      return response;
     },
   });
-
-  console.log(classrooms);
 
   return (
     <div className="h-full px-6 py-4 w-full">
@@ -40,7 +48,10 @@ const Rooms: React.FC = () => {
           </Dialog>
         )}
       </div>
-      <div className="flex flex-col space-y-2 h-[90%] p-6 overflow-y-auto rounded-lg">
+      <div className="mb-5">
+        <DatePicker date={date} setDate={setDate} />
+      </div>
+      <div className="flex flex-col space-y-2 h-[90%] overflow-y-auto rounded-lg">
         {classrooms &&
           (classrooms.length > 0 ? (
             classrooms?.map((e: IRooms) => (

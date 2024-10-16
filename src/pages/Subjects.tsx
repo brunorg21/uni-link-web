@@ -19,8 +19,6 @@ const Subjects: React.FC = () => {
     },
   });
 
-  console.log(subjects);
-
   return (
     <div className="h-full px-6 py-4 w-full">
       <div className="flex items-center justify-between mb-5">

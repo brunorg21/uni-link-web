@@ -28,7 +28,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError, AxiosResponse } from "axios";
-import { createSubject } from "@/mutations/create-subject";
+import { createSubject } from "@/http/create-subject";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/react-query";
 import { User } from "@/models/user";
@@ -74,7 +74,6 @@ export function SubjectModal() {
 
     mutationKey: ["create-subject"],
     onSuccess: (response) => {
-      console.log("response", response);
       if (response.status === 201) {
         toast.success("Matéria criada com sucesso");
         queryClient.invalidateQueries({
@@ -85,7 +84,6 @@ export function SubjectModal() {
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
-        console.log("response", error);
         error.response?.data.message && toast.error("Erro ao criar matéria");
       }
     },

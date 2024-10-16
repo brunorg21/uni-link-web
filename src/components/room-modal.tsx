@@ -28,7 +28,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError, AxiosResponse } from "axios";
-import { createRoom } from "@/mutations/create-room";
+import { createRoom } from "@/http/create-room";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/react-query";
 
@@ -84,7 +84,6 @@ export function RoomModal() {
 
     mutationKey: ["create-room"],
     onSuccess: (response) => {
-      console.log("response", response);
       if (response.status === 201) {
         toast.success("Sala criada com sucesso");
         queryClient.invalidateQueries({
