@@ -21,7 +21,6 @@ const AppContainer: React.FC = () => {
         <img src={logo} />
         <div className="flex flex-col gap-y-4">
           <NavButton name="House" text="Página Inicial" to="/home" />
-          <NavButton name="Plus" text="Nova alocação" to="/new-alocation" />
           <NavButton name="DoorOpen" text="Salas" to="/rooms" />
           <NavButton name="UserRoundPen" text="Professores" to="/teachers" />
           <NavButton name="Book" text="Matérias" to="/subjects" />

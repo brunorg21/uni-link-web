@@ -13,8 +13,8 @@ const Home = () => {
 
 
   return (
-    <div className="h-full px-6 py-4 overflow-auto">
-      <div className="mb-5">
+    <div className="h-full px-6 py-4 overflow-auto ">
+      <div className="mb-5 h-[10%]">
         <div>
           <p className="text-white text-4xl">
             {user ? `Olá, ${user?.name}` : "Carregando..."}
@@ -23,8 +23,8 @@ const Home = () => {
         </div>
         
       </div>
-      <div className="flex flex-col space-y-2">
-        <div className="flex gap-2 justify-between items-center">
+      <div className="flex flex-col space-y-2 h-[86%]">
+        <div className="flex gap-2 justify-between items-center h-1/2">
           <ClassesCard />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Paper>
@@ -34,6 +34,7 @@ const Home = () => {
         </div>
         {user && user.role === "STUDENT" && <StudentHome />}
         {user && user.role === "TEACHER" && <TeacherHome />}
+        {user && user.role === "ADMIN" && <TeacherHome />}
       </div>
     </div>
   );
