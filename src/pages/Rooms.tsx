@@ -10,15 +10,25 @@ import { RoomModal } from "@/components/room-modal";
 
 import { DatePicker } from "@/components/ui/date-picker";
 import { useState } from "react";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 
+dayjs.extend(utc);
 const Rooms: React.FC = () => {
   const [date, setDate] = useState<Date>();
   const { user } = useUser();
+
   const { data: classrooms } = useQuery<IRooms[]>({
     queryKey: ["classrooms", date],
     queryFn: async () => {
       const response = await api
-        .get(`/classrooms${date ? `?date=${date.toISOString()}` : ""}`)
+        .get(
+          `/classrooms?date=${
+            date
+              ? date.toISOString()
+              : dayjs(new Date()).utc().startOf("day").toISOString()
+          }`
+        )
         .then((response) => response.data);
 
       console.log("response", response);
@@ -49,7 +59,11 @@ const Rooms: React.FC = () => {
         )}
       </div>
       <div className="mb-5">
-        <DatePicker date={date} setDate={setDate} />
+        <span className="text-secondary text-lg mr-3">Filtros:</span>
+        <DatePicker
+          date={date ? date : dayjs(new Date()).toDate()}
+          setDate={setDate}
+        />
       </div>
       <div className="flex flex-col space-y-2 h-[90%] overflow-y-auto rounded-lg">
         {classrooms &&
@@ -62,7 +76,7 @@ const Rooms: React.FC = () => {
               <BookMarkedIcon size={70} />
               <div className="flex flex-col gap-4 items-center">
                 <p>Gerencie as salas para sua instituição</p>
-                <span className="text-zinc-400">Nenhuma sala cadastrada.</span>
+                <span className="text-zinc-400">Nenhuma sala encontrada.</span>
               </div>
             </div>
           ))}

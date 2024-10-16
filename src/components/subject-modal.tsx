@@ -130,14 +130,14 @@ export function SubjectModal() {
             name="teacherId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Tipo de sala</FormLabel>
+                <FormLabel>Professor</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione o tipo da sala" />
+                      <SelectValue placeholder="Selecione o professor" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
