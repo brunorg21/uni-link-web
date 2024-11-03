@@ -35,6 +35,10 @@ import { User } from "@/models/user";
 import { api } from "@/lib/axios";
 import { ISubjects } from "@/models/subjects";
 import { updateSubject } from "@/http/update-subject";
+import { ICourse } from "@/models/course";
+import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+import { AlertCircleIcon, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface SubjectModalProps {
   subjectToEdit?: ISubjects | null;
@@ -47,6 +51,19 @@ const createSubjectSchema = z.object({
   name: z.string({
     message: "Preencha o nome da matéria",
   }),
+  courseId: z.string({
+    message: "Preencha o curso que deseja vincular",
+  }),
+  semester: z.coerce
+    .number({
+      message: "Preencha o semestre que será lecionada a matéria",
+    })
+    .max(8, {
+      message: "O semestre deve ser menor ou igual a 8",
+    })
+    .min(1, {
+      message: "O semestre deve ser maior ou igual a 1",
+    }),
 });
 
 export type SubjectFormType = z.infer<typeof createSubjectSchema>;
@@ -57,6 +74,8 @@ export function SubjectModal({ subjectToEdit }: SubjectModalProps) {
     defaultValues: {
       name: subjectToEdit?.name || "",
       teacherId: subjectToEdit?.user.id || "",
+      courseId: subjectToEdit?.courseId || "",
+      semester: subjectToEdit?.semester || 1,
     },
   });
 
@@ -67,16 +86,27 @@ export function SubjectModal({ subjectToEdit }: SubjectModalProps) {
     },
   });
 
+  const { data: courses } = useQuery<ICourse[]>({
+    queryKey: ["courses"],
+    queryFn: () => {
+      return api.get("/courses").then((response) => response.data);
+    },
+  });
+
+  const noCoursesToCreateSubject = courses?.length === 0;
+
   const createSubjectMutation = useMutation<
     AxiosResponse,
     unknown,
     SubjectFormType,
     unknown
   >({
-    mutationFn: async ({ name, teacherId }) => {
+    mutationFn: async ({ name, teacherId, courseId, semester }) => {
       const response = await createSubject({
         name,
         teacherId,
+        courseId,
+        semester,
       });
 
       return response;
@@ -93,6 +123,7 @@ export function SubjectModal({ subjectToEdit }: SubjectModalProps) {
       }
     },
     onError: (error) => {
+      console.log("error", error);
       if (error instanceof AxiosError) {
         error.response?.data.message && toast.error("Erro ao criar matéria");
       }
@@ -105,11 +136,13 @@ export function SubjectModal({ subjectToEdit }: SubjectModalProps) {
     SubjectFormType,
     unknown
   >({
-    mutationFn: async ({ name, teacherId }) => {
+    mutationFn: async ({ name, teacherId, courseId, semester }) => {
       const response = await updateSubject({
         name,
         teacherId,
         subjectId: subjectToEdit?.id || "",
+        courseId,
+        semester,
       });
 
       console.log("response", response);
@@ -146,78 +179,157 @@ export function SubjectModal({ subjectToEdit }: SubjectModalProps) {
 
   return (
     <DialogContent className="sm:max-w-[425px] md:max-w-[800px]">
-      <DialogHeader>
-        <DialogTitle>
-          {subjectToEdit ? "Atualizar matéria" : "Criar nova matéria"}
-        </DialogTitle>
-        <DialogDescription>
-          {`Preencha os campos para ${
-            subjectToEdit ? "atualizar uma" : "adicionar uma nova"
-          }} matéria na sua instituição.`}
-        </DialogDescription>
-      </DialogHeader>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(handleCreateSubject)}
-          className="grid grid-cols-2 gap-2"
-        >
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nome</FormLabel>
-                <FormControl>
-                  <Input
-                    id="name"
-                    placeholder="Preencha com o nome da matéria"
-                    {...field}
-                  />
-                </FormControl>
+      {noCoursesToCreateSubject ? (
+        <Alert className="space-y-2" variant="default">
+          <AlertTitle className="flex items-center gap-2 text-xl">
+            <AlertCircleIcon className="h-6 w-6" /> Nenhum curso encontrado!
+          </AlertTitle>
+          <AlertDescription className="text-lg">
+            Comece adicionando um curso na sua instituição antes de adicionar
+            uma nova matéria.
+          </AlertDescription>
+          <Button asChild size={"default"} variant={"default"}>
+            <Link className="flex items-center gap-2" to="/courses">
+              Ir para cursos <ChevronRight />
+            </Link>
+          </Button>
+        </Alert>
+      ) : (
+        <>
+          <DialogHeader>
+            <DialogTitle>
+              {subjectToEdit ? "Atualizar matéria" : "Criar nova matéria"}
+            </DialogTitle>
+            <DialogDescription>
+              {`Preencha os campos para ${
+                subjectToEdit ? "atualizar uma" : "adicionar uma nova"
+              } matéria na sua instituição.`}
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleCreateSubject)}
+              className="grid grid-cols-2 gap-2"
+            >
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nome</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="name"
+                        placeholder="Preencha com o nome da matéria"
+                        {...field}
+                      />
+                    </FormControl>
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="teacherId"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Professor</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione o professor" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectGroup>
-                      {users && users.length > 0 ? (
-                        users?.map((user) => (
-                          <SelectItem value={user.id}>{user.name}</SelectItem>
-                        ))
-                      ) : (
-                        <p className="text-sm">Nenhum professor encontrado</p>
-                      )}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+              <FormField
+                control={form.control}
+                name="semester"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Semestre</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="semester"
+                        placeholder="Preencha o semestre da matéria"
+                        {...field}
+                        type="number"
+                        max={8}
+                        min={1}
+                      />
+                    </FormControl>
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <div className="col-span-2 flex w-full items-end justify-end">
-            <Button type="submit">Salvar</Button>
-          </div>
-        </form>
-      </Form>
+              <FormField
+                control={form.control}
+                name="teacherId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Professor</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione o professor" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectGroup>
+                          {users && users.length > 0 ? (
+                            users?.map((user) => (
+                              <SelectItem value={user.id}>
+                                {user.name}
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <p className="text-sm">
+                              Nenhum professor encontrado
+                            </p>
+                          )}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="courseId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Curso</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione o curso" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectGroup>
+                          {courses && courses.length > 0 ? (
+                            courses?.map((course) => (
+                              <SelectItem value={course.id}>
+                                {course.name}
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <p className="text-sm">Nenhum curso encontrado</p>
+                          )}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="col-span-2 flex w-full items-end justify-end">
+                <Button type="submit">Salvar</Button>
+              </div>
+            </form>
+          </Form>
+        </>
+      )}
     </DialogContent>
   );
 }

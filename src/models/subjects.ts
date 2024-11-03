@@ -1,3 +1,4 @@
+import { ICourse } from "./course";
 import { User } from "./user";
 
 export interface ISubjects {
@@ -5,4 +6,7 @@ export interface ISubjects {
   name: string;
   userId: string;
   user: User;
+  semester: number;
+  courseId: string;
+  course: ICourse;
 }

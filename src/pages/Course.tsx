@@ -2,9 +2,7 @@ import { Book, MoreHorizontal, PlusCircle } from "lucide-react";
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
-import { ISubjects } from "@/models/subjects";
 
-import { SubjectModal } from "@/components/subject-modal";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/contexts/user-context";
@@ -19,35 +17,35 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DataTable } from "@/components/data-table";
-import { ITeacher } from "@/models/teacher";
-import { useState } from "react";
-import { ICourse } from "@/models/course";
 
-const Subjects: React.FC = () => {
+import { ICourse } from "@/models/course";
+import { ISubjects } from "@/models/subjects";
+import { CourseModal } from "@/components/course-modal";
+import { useState } from "react";
+
+const Course: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [subjectToEdit, setSubjectToEdit] = useState<ISubjects | null>(null);
+  const [courseToEdit, setCourseToEdit] = useState<ICourse | null>(null);
   const { user } = useUser();
 
-  const handleOpenModal = (subject: ISubjects) => {
-    setSubjectToEdit(subject);
+  const handleOpenModal = (course: ICourse) => {
+    setCourseToEdit(course);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSubjectToEdit(null);
+    setCourseToEdit(null);
   };
 
-  const { data: subjects } = useQuery<ISubjects[]>({
-    queryKey: ["subjects"],
+  const { data: courses } = useQuery<ICourse[]>({
+    queryKey: ["courses"],
     queryFn: () => {
-      return api.get("/subjects").then((response) => response.data);
+      return api.get("/courses").then((response) => response.data);
     },
   });
 
-  console.log("subjects", subjects);
-
-  const columns: ColumnDef<ISubjects>[] = [
+  const columns: ColumnDef<ICourse>[] = [
     {
       id: "select",
       header: ({ table }) => (
@@ -73,33 +71,14 @@ const Subjects: React.FC = () => {
     {
       accessorKey: "name",
       header: "Nome",
-      cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("name")}</div>
-      ),
+      cell: ({ row }) => <div>{row.getValue("name")}</div>,
     },
     {
-      accessorKey: "user",
-      header: "Professor",
+      accessorKey: "subjects",
+      header: "Matérias",
       cell: ({ row }) => {
-        const teacher: ITeacher = row.getValue("user");
-
-        return <div>{teacher.name}</div>;
-      },
-    },
-    {
-      accessorKey: "course",
-      header: "Curso",
-      cell: ({ row }) => {
-        const course: ICourse = row.getValue("course");
-
-        return <div>{course.name}</div>;
-      },
-    },
-    {
-      accessorKey: "semester",
-      header: "Semestre",
-      cell: ({ row }) => {
-        return <div>{`${row.getValue("semester")}º Semestre`}</div>;
+        const subjects: ISubjects[] = row.getValue("subjects");
+        return <div>{subjects.map((e) => e.name).join(", ")}</div>;
       },
     },
     {
@@ -137,7 +116,7 @@ const Subjects: React.FC = () => {
   const filters = [
     {
       column: "name",
-      placeholder: "Matéria",
+      placeholder: "Nome do curso",
     },
   ];
 
@@ -145,7 +124,7 @@ const Subjects: React.FC = () => {
     <div className="h-full px-6 py-4 w-full">
       <div className="flex items-center justify-between mb-5">
         <div>
-          <p className="text-secondary text-3xl">Matérias</p>
+          <p className="text-secondary text-3xl">Cursos</p>
           <p className="text-gray-400 text-xl">Gestão</p>
         </div>
         {user?.role === "ADMIN" && (
@@ -159,26 +138,25 @@ const Subjects: React.FC = () => {
                   <PlusCircle size={20} /> Adicionar nova matéria
                 </Button>
               </DialogTrigger>
-              <SubjectModal />
+              <CourseModal />
             </Dialog>
+
             <Dialog open={isModalOpen} onOpenChange={handleCloseModal}>
-              {isModalOpen && <SubjectModal subjectToEdit={subjectToEdit} />}
+              {isModalOpen && <CourseModal courseToEdit={courseToEdit} />}
             </Dialog>
           </>
         )}
       </div>
       <div className="flex space-y-2 h-[90%] p-6 overflow-y-auto rounded-lg">
-        {subjects &&
-          (subjects.length > 0 ? (
-            <DataTable filters={filters} columns={columns} data={subjects} />
+        {courses &&
+          (courses.length > 0 ? (
+            <DataTable filters={filters} columns={columns} data={courses} />
           ) : (
             <div className="flex gap-4 justify-center items-center text-secondary text-2xl h-[500px] w-full">
               <Book size={70} />
               <div className="flex flex-col gap-4 items-center">
-                <p>Gerencie as matérias para os seus professores</p>
-                <span className="text-zinc-400">
-                  Nenhuma matéria cadastrada
-                </span>
+                <p>Gerencie os cursos para sua instituição</p>
+                <span className="text-zinc-400">Nenhuma curso cadastrado</span>
               </div>
             </div>
           ))}
@@ -187,4 +165,4 @@ const Subjects: React.FC = () => {
   );
 };
 
-export default Subjects;
+export default Course;
