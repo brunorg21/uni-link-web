@@ -6,8 +6,6 @@ interface TeachersProps {
 }
 
 const TeachersCard = ({ teacher, whiteMode }: TeachersProps) => {
-  console.log("teacher", teacher);
-
   return (
     <div
       className={`flex flex-row ${

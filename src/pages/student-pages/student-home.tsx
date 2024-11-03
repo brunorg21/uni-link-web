@@ -5,7 +5,6 @@ import { ITeacher } from "@/models/teacher";
 import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { useState } from "react";
-import { set } from "react-hook-form";
 
 export function StudentHome() {
   const { data: teachers } = useQuery<ITeacher[]>({
@@ -14,7 +13,7 @@ export function StudentHome() {
       return api.get("/teachers").then((response) => response.data);
     },
   });
-  const [search, setSeach] = useState("");
+  const [search, setSearch] = useState("");
   const filtedTeachers = teachers?.filter((e: ITeacher) => {
     return e.name.toLowerCase().includes(search.toLowerCase());
   });
@@ -24,7 +23,7 @@ export function StudentHome() {
         <Search className="absolute left-3 top-6 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
         <Input
           onChange={(e) => {
-            setSeach(e.target.value);
+            setSearch(e.target.value);
           }}
           value={search}
           className="pl-10 h-full bg-white text-base"

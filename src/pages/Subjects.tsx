@@ -31,8 +31,6 @@ const Subjects: React.FC = () => {
     },
   });
 
-  console.log(subjects);
-
   const columns: ColumnDef<ISubjects>[] = [
     {
       id: "select",

@@ -26,12 +26,10 @@ const Rooms: React.FC = () => {
           `/classrooms?date=${
             date
               ? date.toISOString()
-              : dayjs(new Date()).utc().startOf("day").toISOString()
+              : dayjs(new Date()).startOf("day").toISOString()
           }`
         )
         .then((response) => response.data);
-
-      console.log("response", response);
 
       return response;
     },
