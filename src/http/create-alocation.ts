@@ -6,6 +6,7 @@ export interface CreateAlocationRequest {
   classScheduleIds: string[];
   classroomId: string;
   date: Date;
+  userId: string;
 }
 
 export async function createAlocation({
@@ -13,12 +14,14 @@ export async function createAlocation({
   classScheduleIds,
   classroomId,
   date,
+  userId,
 }: CreateAlocationRequest) {
   const response: AxiosResponse = await api.post("/alocations", {
     subjectId,
     classScheduleIds,
     classroomId,
     date,
+    userId,
   });
 
   return response;

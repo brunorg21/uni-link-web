@@ -16,9 +16,9 @@ const TeachersCard = ({ teacher, whiteMode }: TeachersProps) => {
         <span className={`${whiteMode ? "text-black" : "text-white"} text-2xl`}>
           {teacher.name}
         </span>
-        <div className="flex gap-2 items-start">
+        <div className="flex gap-2 items-start ">
           {teacher.subjects?.map((e) => (
-            <p className="text-md text-secondary">{e.name}</p>
+            <p className="text-md text-primary">{e.name}</p>
           ))}
         </div>
       </div>

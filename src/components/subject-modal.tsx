@@ -33,6 +33,12 @@ import { toast } from "sonner";
 import { queryClient } from "@/lib/react-query";
 import { User } from "@/models/user";
 import { api } from "@/lib/axios";
+import { ISubjects } from "@/models/subjects";
+import { updateSubject } from "@/http/update-subject";
+
+interface SubjectModalProps {
+  subjectToEdit?: ISubjects | null;
+}
 
 const createSubjectSchema = z.object({
   teacherId: z.string({
@@ -43,11 +49,15 @@ const createSubjectSchema = z.object({
   }),
 });
 
-export type CreateSubjectType = z.infer<typeof createSubjectSchema>;
+export type SubjectFormType = z.infer<typeof createSubjectSchema>;
 
-export function SubjectModal() {
-  const form = useForm<CreateSubjectType>({
+export function SubjectModal({ subjectToEdit }: SubjectModalProps) {
+  const form = useForm<SubjectFormType>({
     resolver: zodResolver(createSubjectSchema),
+    defaultValues: {
+      name: subjectToEdit?.name || "",
+      teacherId: subjectToEdit?.user.id || "",
+    },
   });
 
   const { data: users } = useQuery<User[]>({
@@ -60,7 +70,7 @@ export function SubjectModal() {
   const createSubjectMutation = useMutation<
     AxiosResponse,
     unknown,
-    CreateSubjectType,
+    SubjectFormType,
     unknown
   >({
     mutationFn: async ({ name, teacherId }) => {
@@ -89,16 +99,61 @@ export function SubjectModal() {
     },
   });
 
-  async function handleCreateSubject(data: CreateSubjectType) {
-    createSubjectMutation.mutate(data);
+  const updateSubjectMutation = useMutation<
+    AxiosResponse,
+    unknown,
+    SubjectFormType,
+    unknown
+  >({
+    mutationFn: async ({ name, teacherId }) => {
+      const response = await updateSubject({
+        name,
+        teacherId,
+        subjectId: subjectToEdit?.id || "",
+      });
+
+      console.log("response", response);
+
+      return response;
+    },
+
+    mutationKey: ["update-subject"],
+    onSuccess: (response) => {
+      if (response.status === 204) {
+        toast.success("Matéria atualizada com sucesso");
+        queryClient.invalidateQueries({
+          queryKey: ["subjects"],
+        });
+        form.reset();
+      }
+    },
+    onError: (error) => {
+      console.log("error", error);
+      if (error instanceof AxiosError) {
+        error.response?.data.message &&
+          toast.error("Erro ao atualizar matéria");
+      }
+    },
+  });
+
+  async function handleCreateSubject(data: SubjectFormType) {
+    if (!subjectToEdit) {
+      createSubjectMutation.mutate(data);
+    } else {
+      updateSubjectMutation.mutate(data);
+    }
   }
 
   return (
     <DialogContent className="sm:max-w-[425px] md:max-w-[800px]">
       <DialogHeader>
-        <DialogTitle>Criar nova sala</DialogTitle>
+        <DialogTitle>
+          {subjectToEdit ? "Atualizar matéria" : "Criar nova matéria"}
+        </DialogTitle>
         <DialogDescription>
-          Preencha os campos para adicionar uma nova sala na sua instituição.
+          {`Preencha os campos para ${
+            subjectToEdit ? "atualizar uma" : "adicionar uma nova"
+          }} matéria na sua instituição.`}
         </DialogDescription>
       </DialogHeader>
       <Form {...form}>

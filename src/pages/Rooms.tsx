@@ -35,6 +35,8 @@ const Rooms: React.FC = () => {
     },
   });
 
+  console.log("classrooms", classrooms);
+
   return (
     <div className="h-full px-6 py-4 w-full">
       <div className="flex items-center justify-between mb-5">

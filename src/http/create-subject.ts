@@ -1,8 +1,12 @@
-import { CreateSubjectType } from "@/components/subject-modal";
 import { api } from "@/lib/axios";
 import { AxiosResponse } from "axios";
 
-export async function createSubject({ name, teacherId }: CreateSubjectType) {
+interface CreateSubjectRequest {
+  name: string;
+  teacherId: string;
+}
+
+export async function createSubject({ name, teacherId }: CreateSubjectRequest) {
   const response: AxiosResponse = await api.post("/subjects", {
     name,
     userId: teacherId,

@@ -1,7 +1,10 @@
 import { ISubjects } from "./subjects";
 
 export interface ITeacher {
-  id: number;
+  id: string;
   name: string;
+  password_hash: string;
+  email: string;
+  role: "TEACHER";
   subjects: ISubjects[];
 }

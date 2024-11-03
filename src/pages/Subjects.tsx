@@ -20,9 +20,22 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DataTable } from "@/components/data-table";
 import { ITeacher } from "@/models/teacher";
+import { useState } from "react";
 
 const Subjects: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [subjectToEdit, setSubjectToEdit] = useState<ISubjects | null>(null);
   const { user } = useUser();
+
+  const handleOpenModal = (subject: ISubjects) => {
+    setSubjectToEdit(subject);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSubjectToEdit(null);
+  };
 
   const { data: subjects } = useQuery<ISubjects[]>({
     queryKey: ["subjects"],
@@ -73,22 +86,30 @@ const Subjects: React.FC = () => {
     {
       id: "actions",
       enableHiding: false,
-      cell: () => {
+      cell: ({ row }) => {
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Abrir menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Ações</DropdownMenuLabel>
+          <>
+            {user?.role === "ADMIN" && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-8 w-8 p-0">
+                    <span className="sr-only">Abrir menu</span>
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Visualizar matéria</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => handleOpenModal(row.original)}
+                  >
+                    Visualizar matéria
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </>
         );
       },
     },
@@ -109,17 +130,22 @@ const Subjects: React.FC = () => {
           <p className="text-gray-400 text-xl">Gestão</p>
         </div>
         {user?.role === "ADMIN" && (
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button
-                variant={"secondary"}
-                className="flex items-center gap-2 p-4"
-              >
-                <PlusCircle size={20} /> Adicionar nova matéria
-              </Button>
-            </DialogTrigger>
-            <SubjectModal />
-          </Dialog>
+          <>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant={"secondary"}
+                  className="flex items-center gap-2 p-4"
+                >
+                  <PlusCircle size={20} /> Adicionar nova matéria
+                </Button>
+              </DialogTrigger>
+              <SubjectModal />
+            </Dialog>
+            <Dialog open={isModalOpen} onOpenChange={handleCloseModal}>
+              {isModalOpen && <SubjectModal subjectToEdit={subjectToEdit} />}
+            </Dialog>
+          </>
         )}
       </div>
       <div className="flex space-y-2 h-[90%] p-6 overflow-y-auto rounded-lg">
