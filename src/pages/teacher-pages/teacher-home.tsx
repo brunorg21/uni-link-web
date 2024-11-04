@@ -1,11 +1,15 @@
 import RoomsAvailable from "../../components/RoomsAvailable/RoomsAvailable";
 import MostUsedRooms from "../../components/MostUsedRooms";
+import { Dayjs } from "dayjs";
 
-export function TeacherHome() {
+interface TeacherHomeProps {
+  date: Dayjs | null;
+}
+export function TeacherHome({ date }: TeacherHomeProps) {
   return (
     <>
-      <RoomsAvailable />
-      <MostUsedRooms />
+      <RoomsAvailable date={date} />
+      <MostUsedRooms date={date} />
     </>
   );
 }

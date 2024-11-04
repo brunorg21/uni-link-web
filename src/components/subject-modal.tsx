@@ -112,8 +112,6 @@ export function SubjectModal({ subjectToEdit }: SubjectModalProps) {
         subjectId: subjectToEdit?.id || "",
       });
 
-      console.log("response", response);
-
       return response;
     },
 

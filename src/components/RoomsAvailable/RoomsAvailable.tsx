@@ -3,11 +3,13 @@ import { RoomsAvailableCard } from "./RoomsAvailableCard";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
-const RoomsAvailable: React.FC = () => {
-  const [date, setDate] = useState<Date>();
+interface RoomsAvailableProps {
+  date: Dayjs | null;
+}
 
+const RoomsAvailable: React.FC<RoomsAvailableProps> = ({ date }) => {
   const { data: classrooms } = useQuery<IRooms[]>({
     queryKey: ["classrooms", date],
     queryFn: async () => {
@@ -29,9 +31,11 @@ const RoomsAvailable: React.FC = () => {
     <div className="h-64 rounded-md bg-white p-3 font-bold row-span-1">
       <p className="text-2xl pb-3">Salas e Laboratórios Disponíveis</p>
       <div className="h-48 flex gap-3 overflow-auto">
-        {classrooms?.map((classroom) => (
-          <RoomsAvailableCard classroom={classroom} />
-        ))}
+        {classrooms
+          ?.filter((classroom) => classroom.alocations.length < 5)
+          .map((classroom) => (
+            <RoomsAvailableCard key={classroom.id} classroom={classroom} />
+          ))}
       </div>
     </div>
   );
