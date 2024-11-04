@@ -7,6 +7,8 @@ import Rooms from "../pages/Rooms";
 import Teachers from "../pages/Teachers";
 import Subjects from "../pages/Subjects";
 import { RequireAuth } from "./RequireAuth";
+import Course from "@/pages/Course";
+import { Config } from "@/pages/Config";
 
 export const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
@@ -34,6 +36,14 @@ export const router = createBrowserRouter([
       {
         path: "/subjects",
         element: <Subjects />,
+      },
+      {
+        path: "/courses",
+        element: <Course />,
+      },
+      {
+        path: "/config",
+        element: <Config />,
       },
     ],
   },
