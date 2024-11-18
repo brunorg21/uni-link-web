@@ -168,7 +168,7 @@ export function TeacherModal({ teacherToEdit }: TeacherModalProps) {
                 <FormControl>
                   <Input
                     id="name"
-                    placeholder="Preencha com o nome da matéria"
+                    placeholder="Preencha com o nome do professor"
                     {...field}
                   />
                 </FormControl>

@@ -4,8 +4,9 @@ import { AxiosResponse } from "axios";
 export interface CreateTeacherRequest {
   name: string;
   email: string;
-  role: "TEACHER";
+  role: "TEACHER" | "STUDENT";
   password: string;
+  courseId?: string;
 }
 
 export async function createTeacher({
@@ -13,12 +14,14 @@ export async function createTeacher({
   name,
   password,
   role,
+  courseId
 }: CreateTeacherRequest) {
   const response: AxiosResponse = await api.post("/teachers", {
     email,
     name,
     password,
     role,
+    courseId
   });
 
   return response;

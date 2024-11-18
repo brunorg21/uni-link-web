@@ -8,7 +8,7 @@ import Teachers from "../pages/Teachers";
 import Subjects from "../pages/Subjects";
 import { RequireAuth } from "./RequireAuth";
 import Course from "@/pages/Course";
-import { Config } from "@/pages/Config";
+import { Config } from "@/pages/config-page/config";
 
 export const router = createBrowserRouter([
   { path: "/login", element: <Login /> },

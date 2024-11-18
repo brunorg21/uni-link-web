@@ -113,14 +113,6 @@ export function AlocationAdminForm({ classroom }: AlocationAdminFormProps) {
       date,
       userId,
     }) => {
-      console.log({
-        classScheduleIds,
-        classroomId,
-        subjectId,
-        date,
-        userId,
-      });
-
       const response = await createAlocation({
         classScheduleIds,
         classroomId,
