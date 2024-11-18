@@ -2,23 +2,31 @@ import { IRooms } from "@/models/rooms";
 import { useQuery } from "@tanstack/react-query";
 import { RoomsAvailableCard } from "./RoomsAvailable/RoomsAvailableCard";
 import { api } from "@/lib/axios";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
+import { useUser } from "@/contexts/user-context";
 
-const MostUsedRooms: React.FC = () => {
+interface MostUsedRoomsProps {
+  date: Dayjs | null;
+}
+const MostUsedRooms: React.FC<MostUsedRoomsProps> = ({ date }) => {
+  const { user } = useUser();
+
   const { data: classrooms } = useQuery<IRooms[]>({
-    queryKey: ["mostUseful"],
+    queryKey: ["mostUseful", date],
     queryFn: async () => {
       const response = await api
         .get(
-          `/mostUseful?date=${dayjs(new Date()).startOf("day").toISOString()}`
+          `/mostUseful?userId=${user?.id}&date=${
+            date
+              ? date.toISOString()
+              : dayjs(new Date()).startOf("day").toISOString()
+          }`
         )
         .then((response) => response.data);
 
       return response;
     },
   });
-
-  console.log("classrooms", classrooms);
 
   return (
     <div className="h-64 rounded-md bg-white p-3 font-bold">

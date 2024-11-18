@@ -145,8 +145,6 @@ export function SubjectModal({ subjectToEdit }: SubjectModalProps) {
         semester,
       });
 
-      console.log("response", response);
-
       return response;
     },
 
