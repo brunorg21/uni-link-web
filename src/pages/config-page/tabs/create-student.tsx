@@ -105,15 +105,13 @@ export function CreateStudent() {
   });
 
   async function handleCreateStudent(data: CreateStudentType) {
-    await createStudentMutation.mutate(data);
+    createStudentMutation.mutate(data);
   }
 
   return (
     <div className="flex items-center justify-center p-4">
       <div className="bg-secondary w-full p-4  rounded-md">
-        <h1 className="text-2xl font-bold mb-4">
-          Matrícula de Alunos por Semestre
-        </h1>
+        <h1 className="text-2xl font-bold mb-4">Cadastrar aluno</h1>
 
         <Form {...form}>
           <form

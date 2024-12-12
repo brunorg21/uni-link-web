@@ -26,6 +26,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AxiosError, AxiosResponse } from "axios";
 import { assignStudent } from "@/http/assign-student-with-subjects";
 import { toast } from "sonner";
+import { useUser } from "@/contexts/user-context";
 
 const assignStudentWithSubjectsSchema = z.object({
   studentId: z.string({
@@ -41,6 +42,10 @@ type AssignStudentWithSubjectsType = z.infer<
 >;
 
 export function AssignStudentWithSubjects() {
+  const { user } = useUser();
+
+  const isStudent = user?.role === "STUDENT";
+
   const { data: students } = useQuery<User[]>({
     queryKey: ["students"],
     queryFn: () => {
@@ -51,10 +56,12 @@ export function AssignStudentWithSubjects() {
   const form = useForm<AssignStudentWithSubjectsType>({
     resolver: zodResolver(assignStudentWithSubjectsSchema),
     defaultValues: {
-      studentId: "",
+      studentId: isStudent ? user?.id : "",
       semester: "",
     },
   });
+
+  console.log("default", form.formState.defaultValues);
 
   const assignStudentMutation = useMutation<
     AxiosResponse,
@@ -116,7 +123,7 @@ export function AssignStudentWithSubjects() {
                     onValueChange={field.onChange}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger disabled={isStudent}>
                         <SelectValue placeholder="Seleciona o aluno" />
                       </SelectTrigger>
                     </FormControl>
@@ -178,13 +185,11 @@ export function AssignStudentWithSubjects() {
                 </FormItem>
               )}
             />
-
             {form.formState.errors.semester && (
               <p className="text-red-400 text-sm">
                 {form.formState.errors.semester.message}
               </p>
             )}
-
             <div className="col-span-2 flex w-full items-end justify-end">
               <Button
                 disabled={form.formState.isLoading}

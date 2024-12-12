@@ -9,7 +9,7 @@ import { useUser } from "@/contexts/user-context";
 import Cookies from "universal-cookie";
 
 const AppContainer: React.FC = () => {
-  const { setUser } = useUser();
+  const { setUser, user } = useUser();
 
   const cookies = new Cookies();
 
@@ -25,7 +25,20 @@ const AppContainer: React.FC = () => {
           <NavButton name="UserRoundPen" text="Professores" to="/teachers" />
           <NavButton name="Book" text="Matérias" to="/subjects" />
           <NavButton name="GraduationCap" text="Cursos" to="/courses" />
-          <NavButton name="UserRoundCog" text="Configurações" to="/config" />
+          {user?.role === "ADMIN" && (
+            <NavButton name="Clock10" text="Todas alocações" to="/alocations" />
+          )}
+
+          {user?.role === "TEACHER" && (
+            <NavButton
+              name="Clock"
+              text="Minhas alocações"
+              to="/my-alocations"
+            />
+          )}
+          {user?.role !== "TEACHER" && (
+            <NavButton name="UserRoundCog" text="Configurações" to="/config" />
+          )}
           <Button
             variant={"ghost"}
             className={`flex gap-4 items-center text-white hover:text-primary text-md p-6 $`}

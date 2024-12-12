@@ -9,6 +9,8 @@ import Subjects from "../pages/Subjects";
 import { RequireAuth } from "./RequireAuth";
 import Course from "@/pages/Course";
 import { Config } from "@/pages/config-page/config";
+import MyAlocations from "@/pages/MyAlocations";
+import Alocations from "@/pages/admin-pages/Alocations";
 
 export const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
@@ -44,6 +46,14 @@ export const router = createBrowserRouter([
       {
         path: "/config",
         element: <Config />,
+      },
+      {
+        path: "/my-alocations",
+        element: <MyAlocations />,
+      },
+      {
+        path: "/alocations",
+        element: <Alocations />,
       },
     ],
   },

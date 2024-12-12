@@ -1,6 +1,6 @@
 import { Book, MoreHorizontal, PlusCircle } from "lucide-react";
 
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
@@ -22,11 +22,46 @@ import { ICourse } from "@/models/course";
 import { ISubjects } from "@/models/subjects";
 import { CourseModal } from "@/components/course-modal";
 import { useState } from "react";
+import { AxiosError, AxiosResponse } from "axios";
+import { toast } from "sonner";
+import { queryClient } from "@/lib/react-query";
+import { deleteCourse } from "@/http/delete-course";
 
 const Course: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [courseToEdit, setCourseToEdit] = useState<ICourse | null>(null);
   const { user } = useUser();
+
+  const deleteCourseMutation = useMutation<
+    AxiosResponse,
+    unknown,
+    { id: string },
+    unknown
+  >({
+    mutationFn: async ({ id }) => {
+      const response = await deleteCourse({
+        courseId: id,
+      });
+
+      return response;
+    },
+
+    mutationKey: ["delete-alocation"],
+    onSuccess: (response) => {
+      if (response.status === 204) {
+        toast.success("Alocação deletada com sucesso!");
+        queryClient.invalidateQueries({
+          queryKey: ["courses"],
+        });
+      }
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        error.response?.data.message &&
+          toast.error("Erro ao deletar alocação!");
+      }
+    },
+  });
 
   const handleOpenModal = (course: ICourse) => {
     setCourseToEdit(course);
@@ -103,6 +138,16 @@ const Course: React.FC = () => {
                     onClick={() => handleOpenModal(row.original)}
                   >
                     Visualizar matéria
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={async () =>
+                      await deleteCourseMutation.mutateAsync({
+                        id: row.original.id,
+                      })
+                    }
+                    className="text-red-600"
+                  >
+                    Excluir {row.original.name}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

@@ -1,6 +1,6 @@
 import { Book, MoreHorizontal, PlusCircle } from "lucide-react";
 
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import { ISubjects } from "@/models/subjects";
 
@@ -22,6 +22,10 @@ import { DataTable } from "@/components/data-table";
 import { ITeacher } from "@/models/teacher";
 import { useState } from "react";
 import { ICourse } from "@/models/course";
+import { toast } from "sonner";
+import { queryClient } from "@/lib/react-query";
+import { AxiosError, AxiosResponse } from "axios";
+import { deleteSubject } from "@/http/delete-subject";
 
 const Subjects: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -45,7 +49,36 @@ const Subjects: React.FC = () => {
     },
   });
 
-  console.log("subjects", subjects);
+  const deleteSubjectMutation = useMutation<
+    AxiosResponse,
+    unknown,
+    { id: string },
+    unknown
+  >({
+    mutationFn: async ({ id }) => {
+      const response = await deleteSubject({
+        subjectId: id,
+      });
+
+      return response;
+    },
+
+    mutationKey: ["delete-subject"],
+    onSuccess: (response) => {
+      if (response.status === 204) {
+        toast.success("Matéria deletada com sucesso!");
+        queryClient.invalidateQueries({
+          queryKey: ["subjects"],
+        });
+      }
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        error.response?.data.message &&
+          toast.error("Erro ao deletar matéria!");
+      }
+    },
+  });
 
   const columns: ColumnDef<ISubjects>[] = [
     {
@@ -124,6 +157,16 @@ const Subjects: React.FC = () => {
                     onClick={() => handleOpenModal(row.original)}
                   >
                     Visualizar matéria
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={async () =>
+                      await deleteSubjectMutation.mutateAsync({
+                        id: row.original.id,
+                      })
+                    }
+                    className="text-red-600"
+                  >
+                    Excluir {row.original.name}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
