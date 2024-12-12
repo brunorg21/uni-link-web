@@ -6,12 +6,14 @@ import ClassCard from "./ClassCard";
 import { ITeacher } from "@/models/teacher";
 import TeachersCard from "./TeachersCard";
 import ProfessorsCard from "./ProfessorsCard";
+import Cookies from "universal-cookie";
 
 interface TeacherContainerProps {
   date: Dayjs | null;
 }
 const TeacherContainer: React.FC<TeacherContainerProps> = ({ date }) => {
   console.log("DATE", date);
+  const cookies = new Cookies();
 
   const { data: teachers } = useQuery<ITeacher[]>({
     queryKey: ["teachers", date],
@@ -22,14 +24,17 @@ const TeacherContainer: React.FC<TeacherContainerProps> = ({ date }) => {
             date
               ? date.toISOString()
               : dayjs(new Date()).startOf("day").toISOString()
-          }`
+          }`,
+          {
+            headers: { Authorization: `Bearer ${cookies.get("access_token")}` },
+          }
         )
         .then((response) => response.data);
       return response;
     },
   });
 
-  console.log("classeskkkkkkk", teachers);
+  console.log("teachers", teachers);
 
   return (
     <div className="h-[21rem] w-full flex flex-col rounded-md bg-white p-3 font-bold overflow-auto">

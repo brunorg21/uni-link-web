@@ -39,6 +39,7 @@ import { ICourse } from "@/models/course";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { AlertCircleIcon, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import Cookies from "universal-cookie";
 
 interface SubjectModalProps {
   subjectToEdit?: ISubjects | null;
@@ -79,10 +80,16 @@ export function SubjectModal({ subjectToEdit }: SubjectModalProps) {
     },
   });
 
+  const cookies = new Cookies();
+
   const { data: users } = useQuery<User[]>({
     queryKey: ["teachersOnSchool"],
     queryFn: () => {
-      return api.get("/teachers").then((response) => response.data);
+      return api
+        .get("/teachers", {
+          headers: { Authorization: `Bearer ${cookies.get("access_token")}` },
+        })
+        .then((response) => response.data);
     },
   });
 
