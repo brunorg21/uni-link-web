@@ -1,5 +1,6 @@
 import { api } from "@/lib/axios";
 import { AxiosResponse } from "axios";
+import Cookies from "universal-cookie";
 
 export interface CreateTeacherRequest {
   name: string;
@@ -14,14 +15,15 @@ export async function createTeacher({
   name,
   password,
   role,
-  courseId
+  courseId,
 }: CreateTeacherRequest) {
+  const cookies = new Cookies();
   const response: AxiosResponse = await api.post("/teachers", {
     email,
     name,
     password,
     role,
-    courseId
+    courseId,
   });
 
   return response;

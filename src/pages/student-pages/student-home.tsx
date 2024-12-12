@@ -5,12 +5,18 @@ import { ITeacher } from "@/models/teacher";
 import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { useState } from "react";
+import Cookies from "universal-cookie";
 
 export function StudentHome() {
+  const cookies = new Cookies();
   const { data: teachers } = useQuery<ITeacher[]>({
     queryKey: ["teachers"],
     queryFn: () => {
-      return api.get("/teachers").then((response) => response.data);
+      return api
+        .get("/teachers", {
+          headers: { Authorization: `Bearer ${cookies.get("access_token")}` },
+        })
+        .then((response) => response.data);
     },
   });
   const [search, setSearch] = useState("");

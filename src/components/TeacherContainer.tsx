@@ -3,41 +3,49 @@ import { useQuery } from "@tanstack/react-query";
 import { IClasses } from "@/models/classes";
 import { api } from "@/lib/axios";
 import ClassCard from "./ClassCard";
+import { ITeacher } from "@/models/teacher";
+import TeachersCard from "./TeachersCard";
+import ProfessorsCard from "./ProfessorsCard";
+import Cookies from "universal-cookie";
 
-interface ClassesCardProps {
+interface TeacherContainerProps {
   date: Dayjs | null;
 }
-const ClassesCard: React.FC<ClassesCardProps> = ({ date }) => {
+const TeacherContainer: React.FC<TeacherContainerProps> = ({ date }) => {
   console.log("DATE", date);
+  const cookies = new Cookies();
 
-  const { data: classes } = useQuery<IClasses[]>({
-    queryKey: ["classes", date],
+  const { data: teachers } = useQuery<ITeacher[]>({
+    queryKey: ["teachers", date],
     queryFn: async () => {
       const response = await api
         .get(
-          `/classes?date=${
+          `/todayTeachers?date=${
             date
               ? date.toISOString()
               : dayjs(new Date()).startOf("day").toISOString()
-          }`
+          }`,
+          {
+            headers: { Authorization: `Bearer ${cookies.get("access_token")}` },
+          }
         )
         .then((response) => response.data);
       return response;
     },
   });
 
-  console.log("classeskkkkkkk", classes);
+  console.log("teachers", teachers);
 
   return (
     <div className="h-[21rem] w-full flex flex-col rounded-md bg-white p-3 font-bold overflow-auto">
-      <h1 className="text-2xl pb-3">Aulas</h1>
+      <h1 className="text-2xl pb-3">Professores</h1>
       <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-2 h-full">
-        {classes?.map((e) => (
-          <ClassCard key={e.id} classes={e} />
+        {teachers?.map((e) => (
+          <ProfessorsCard key={e.id} teacher={e} />
         ))}
       </div>
     </div>
   );
 };
 
-export default ClassesCard;
+export default TeacherContainer;

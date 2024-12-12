@@ -24,6 +24,8 @@ export function RoomsAvailableCard({ classroom }: RoomsAvailableCardProps) {
     return true;
   });
 
+  console.log("kkkkkkkkkk", schedulesToUse);
+
   return (
     <div className="h-44 bg-[#272727] flex flex-col min-w-60 rounded-lg px-3 py-2 text-center gap-8 justify-center">
       <div className="flex justify-end">

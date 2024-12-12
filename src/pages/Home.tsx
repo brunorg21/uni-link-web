@@ -11,6 +11,8 @@ import { useState } from "react";
 import dayjs, { Dayjs } from "dayjs/";
 import updateLocale from "dayjs/plugin/updateLocale";
 import localeData from "dayjs/plugin/localeData";
+import { AdminHome } from "./admin-pages/admin-home";
+import TeacherContainer from "@/components/TeacherContainer";
 
 dayjs.extend(updateLocale);
 dayjs.extend(localeData);
@@ -21,7 +23,8 @@ dayjs.locale("pt-BR");
 const Home = () => {
   const { user } = useUser();
   const [date, setDate] = useState<Dayjs | null>(dayjs(new Date()));
-  console.log("Weekdays Min:", dayjs.weekdaysMin());
+  console.log("kkkkkkkkk", date);
+
   return (
     <div className="h-full px-6 py-4 overflow-auto ">
       <div className="mb-5 h-[10%]">
@@ -34,7 +37,11 @@ const Home = () => {
       </div>
       <div className="flex flex-col space-y-5 h-[86%]">
         <div className="flex gap-2 justify-between items-center h-1/2">
-          <ClassesCard date={date} />
+          {user?.role !== "ADMIN" ? (
+            <ClassesCard date={date} />
+          ) : (
+            <TeacherContainer date={date} />
+          )}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Paper>
               <DateCalendar
@@ -46,7 +53,7 @@ const Home = () => {
         </div>
         {user && user.role === "STUDENT" && <StudentHome />}
         {user && user.role === "TEACHER" && <TeacherHome date={date} />}
-        {user && user.role === "ADMIN" && <TeacherHome date={date} />}
+        {user && user.role === "ADMIN" && <AdminHome date={date} />}
       </div>
     </div>
   );

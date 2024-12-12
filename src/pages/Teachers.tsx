@@ -31,6 +31,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { deleteTeacher } from "@/http/delete-teacher";
 import { toast } from "sonner";
 import { queryClient } from "@/lib/react-query";
+import Cookies from "universal-cookie";
 
 interface DeleteTeacherProps {
   id: string;
@@ -40,10 +41,15 @@ const Teachers: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [teacherToEdit, setTeacherToEdit] = useState<ITeacher | null>(null);
   const { user } = useUser();
+  const cookies = new Cookies();
   const { data: teachers } = useQuery<ITeacher[]>({
     queryKey: ["teachers"],
     queryFn: () => {
-      return api.get("/teachers").then((response) => response.data);
+      return api
+        .get("/teachers", {
+          headers: { Authorization: `Bearer ${cookies.get("access_token")}` },
+        })
+        .then((response) => response.data);
     },
   });
 

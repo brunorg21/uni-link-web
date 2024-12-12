@@ -36,6 +36,7 @@ import { IRooms } from "@/models/rooms";
 import { Input } from "../ui/input";
 import { ITeacher } from "@/models/teacher";
 import { api } from "@/lib/axios";
+import Cookies from "universal-cookie";
 
 const createClassesAndAlocationSchema = z.object({
   subjectId: z.string({
@@ -92,11 +93,16 @@ export function AlocationAdminForm({ classroom }: AlocationAdminFormProps) {
         teacherId: form.getValues("teacherId") as string,
       }),
   });
+  const cookies = new Cookies();
 
   const { data: teachers } = useQuery<ITeacher[]>({
     queryKey: ["teachers"],
     queryFn: () => {
-      return api.get("/teachers").then((response) => response.data);
+      return api
+        .get("/teachers", {
+          headers: { Authorization: `Bearer ${cookies.get("access_token")}` },
+        })
+        .then((response) => response.data);
     },
   });
 
